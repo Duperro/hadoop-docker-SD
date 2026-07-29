@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+
+    <!-- Ubicación del ResourceManager -->
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>nodo-master</value>
+    </property>
+
+    <!-- Permitir conexiones desde la red Docker -->
+    <property>
+        <name>yarn.resourcemanager.bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+
+    <!-- Interfaz web de YARN -->
+    <property>
+        <name>yarn.resourcemanager.webapp.address</name>
+        <value>0.0.0.0:8088</value>
+    </property>
+
+    <!-- Servicio necesario para ejecutar MapReduce -->
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+
+    <!-- Permitir conexiones hacia los NodeManager -->
+    <property>
+        <name>yarn.nodemanager.bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+
+    <!-- Interfaz web interna de cada NodeManager -->
+    <property>
+        <name>yarn.nodemanager.webapp.address</name>
+        <value>0.0.0.0:8042</value>
+    </property>
+
+    <!-- Directorios temporales de los NodeManager -->
+    <property>
+        <name>yarn.nodemanager.local-dirs</name>
+        <value>/tmp/hadoop-yarn/local</value>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.log-dirs</name>
+        <value>/tmp/hadoop-yarn/logs</value>
+    </property>
+
+    <!-- Recursos disponibles en cada nodo esclavo -->
+    <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>1536</value>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>2</value>
+    </property>
+
+    <!-- Límites utilizados por el planificador -->
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>128</value>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>1536</value>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.maximum-allocation-vcores</name>
+        <value>2</value>
+    </property>
+
+    <!-- Evitar errores de memoria virtual dentro de Docker -->
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+    </property>
+
+    <!-- Conservar los registros de las aplicaciones -->
+    <property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>true</value>
+    </property>
+
+        <!-- Detectar rápidamente NodeManagers perdidos -->
+    <property>
+        <name>yarn.resourcemanager.nm.liveness-monitor.expiry-interval-ms</name>
+        <value>30000</value>
+    </property>
+
+</configuration>

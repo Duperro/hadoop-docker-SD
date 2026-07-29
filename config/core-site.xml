@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+
+    <!-- Dirección principal del sistema HDFS -->
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://nodo-master:9000</value>
+    </property>
+
+    <!-- Directorio temporal utilizado por Hadoop -->
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/tmp/hadoop-${user.name}</value>
+    </property>
+
+    <!-- Usuario empleado por las interfaces web -->
+    <property>
+        <name>hadoop.http.staticuser.user</name>
+        <value>hadoop</value>
+    </property>
+
+</configuration>

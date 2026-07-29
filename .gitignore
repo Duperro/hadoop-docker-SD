@@ -1,0 +1,27 @@
+# Archivos pesados
+*.bin
+*.tar
+*.tar.gz
+*.tgz
+
+# Datos temporales de Hadoop
+data/
+hadoopdata/
+logs/
+tmp/
+*.log
+*.pid
+
+# Archivos generados por Hadoop
+.DS_Store
+Thumbs.db
+
+# Configuración local de editores
+.vscode/
+.idea/
+
+# Configuraciones locales de Docker
+docker-compose.override.yml
+
+# Evidencias temporales
+laboratorio1/evidencias/*.tmp
