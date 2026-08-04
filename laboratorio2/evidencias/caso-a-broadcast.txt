@@ -1,0 +1,127 @@
+26/08/04 14:01:24 INFO SparkContext: Running Spark version 3.5.7
+26/08/04 14:01:24 INFO SparkContext: OS info Linux, 6.18.33.2-microsoft-standard-WSL2, amd64
+26/08/04 14:01:24 INFO SparkContext: Java version 11.0.31
+26/08/04 14:01:24 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/08/04 14:01:24 WARN SparkConf: Note that spark.local.dir will be overridden by the value set by the cluster manager (via SPARK_LOCAL_DIRS in mesos/standalone/kubernetes and LOCAL_DIRS in YARN).
+26/08/04 14:01:24 INFO ResourceUtils: ==============================================================
+26/08/04 14:01:24 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/08/04 14:01:24 INFO ResourceUtils: ==============================================================
+26/08/04 14:01:24 INFO SparkContext: Submitted application: Laboratorio2-CasoA-Broadcast
+26/08/04 14:01:24 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(memoryOverhead -> name: memoryOverhead, amount: 128, script: , vendor: , cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 512, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/08/04 14:01:24 INFO ResourceProfile: Limiting resource is cpus at 1 tasks per executor
+26/08/04 14:01:24 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/08/04 14:01:24 INFO SecurityManager: Changing view acls to: hadoop
+26/08/04 14:01:24 INFO SecurityManager: Changing modify acls to: hadoop
+26/08/04 14:01:24 INFO SecurityManager: Changing view acls groups to: 
+26/08/04 14:01:24 INFO SecurityManager: Changing modify acls groups to: 
+26/08/04 14:01:24 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: hadoop; groups with view permissions: EMPTY; users with modify permissions: hadoop; groups with modify permissions: EMPTY
+26/08/04 14:01:25 INFO Utils: Successfully started service 'sparkDriver' on port 7078.
+26/08/04 14:01:25 INFO SparkEnv: Registering MapOutputTracker
+26/08/04 14:01:25 INFO SparkEnv: Registering BlockManagerMaster
+26/08/04 14:01:25 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/08/04 14:01:25 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/08/04 14:01:25 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/08/04 14:01:25 INFO DiskBlockManager: Created local directory at /tmp/spark/blockmgr-2acc251c-0c35-4a54-92b4-6492ccfd4aa6
+26/08/04 14:01:25 INFO MemoryStore: MemoryStore started with capacity 127.2 MiB
+26/08/04 14:01:25 INFO SparkEnv: Registering OutputCommitCoordinator
+26/08/04 14:01:25 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/08/04 14:01:25 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/08/04 14:01:26 INFO DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nodo-master/172.18.0.3:8032
+26/08/04 14:01:26 INFO Configuration: resource-types.xml not found
+26/08/04 14:01:26 INFO ResourceUtils: Unable to find 'resource-types.xml'.
+26/08/04 14:01:26 INFO Client: Verifying our application has not requested more than the maximum memory capability of the cluster (1536 MB per container)
+26/08/04 14:01:26 INFO Client: Will allocate AM container, with 640 MB memory including 128 MB overhead
+26/08/04 14:01:26 INFO Client: Setting up container launch context for our AM
+26/08/04 14:01:26 INFO Client: Setting up the launch environment for our AM container
+26/08/04 14:01:26 INFO Client: Preparing resources for our AM container
+26/08/04 14:01:27 WARN Client: Neither spark.yarn.jars nor spark.yarn.archive is set, falling back to uploading libraries under SPARK_HOME.
+26/08/04 14:01:29 INFO Client: Uploading resource file:/tmp/spark/spark-c385dcce-e19b-4ab1-bbfe-f1c095325cea/__spark_libs__3765704249474280259.zip -> hdfs://nodo-master:9000/user/hadoop/.sparkStaging/application_1785852031172_0001/__spark_libs__3765704249474280259.zip
+26/08/04 14:01:36 INFO Client: Uploading resource file:/opt/spark/python/lib/pyspark.zip -> hdfs://nodo-master:9000/user/hadoop/.sparkStaging/application_1785852031172_0001/pyspark.zip
+26/08/04 14:01:38 INFO Client: Uploading resource file:/opt/spark/python/lib/py4j-0.10.9.7-src.zip -> hdfs://nodo-master:9000/user/hadoop/.sparkStaging/application_1785852031172_0001/py4j-0.10.9.7-src.zip
+26/08/04 14:01:39 INFO Client: Uploading resource file:/tmp/spark/spark-c385dcce-e19b-4ab1-bbfe-f1c095325cea/__spark_conf__3543172772352158858.zip -> hdfs://nodo-master:9000/user/hadoop/.sparkStaging/application_1785852031172_0001/__spark_conf__.zip
+26/08/04 14:01:39 INFO SecurityManager: Changing view acls to: hadoop
+26/08/04 14:01:39 INFO SecurityManager: Changing modify acls to: hadoop
+26/08/04 14:01:39 INFO SecurityManager: Changing view acls groups to: 
+26/08/04 14:01:39 INFO SecurityManager: Changing modify acls groups to: 
+26/08/04 14:01:39 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: hadoop; groups with view permissions: EMPTY; users with modify permissions: hadoop; groups with modify permissions: EMPTY
+26/08/04 14:01:39 INFO Client: Submitting application application_1785852031172_0001 to ResourceManager
+26/08/04 14:01:39 INFO YarnClientImpl: Submitted application application_1785852031172_0001
+26/08/04 14:01:43 INFO Client: Application report for application_1785852031172_0001 (state: ACCEPTED)
+26/08/04 14:01:43 INFO Client: 
+	 client token: N/A
+	 diagnostics: [Tue Aug 04 14:01:40 +0000 2026] Scheduler has assigned a container for AM, waiting for AM container to be launched
+	 ApplicationMaster host: N/A
+	 ApplicationMaster RPC port: -1
+	 queue: root.default
+	 start time: 1785852099328
+	 final status: UNDEFINED
+	 tracking URL: http://nodo-master:8088/proxy/application_1785852031172_0001/
+	 user: hadoop
+26/08/04 14:01:54 INFO Client: Application report for application_1785852031172_0001 (state: RUNNING)
+26/08/04 14:01:54 INFO Client: 
+	 client token: N/A
+	 diagnostics: N/A
+	 ApplicationMaster host: 172.18.0.4
+	 ApplicationMaster RPC port: -1
+	 queue: root.default
+	 start time: 1785852099328
+	 final status: UNDEFINED
+	 tracking URL: http://nodo-master:8088/proxy/application_1785852031172_0001/
+	 user: hadoop
+26/08/04 14:01:54 INFO YarnClientSchedulerBackend: Application application_1785852031172_0001 has started running.
+26/08/04 14:01:54 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 7079.
+26/08/04 14:01:54 INFO NettyBlockTransferService: Server created on nodo-master 0.0.0.0:7079
+26/08/04 14:01:54 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/08/04 14:01:54 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, nodo-master, 7079, None)
+26/08/04 14:01:54 INFO BlockManagerMasterEndpoint: Registering block manager nodo-master:7079 with 127.2 MiB RAM, BlockManagerId(driver, nodo-master, 7079, None)
+26/08/04 14:01:54 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, nodo-master, 7079, None)
+26/08/04 14:01:54 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, nodo-master, 7079, None)
+26/08/04 14:01:54 INFO YarnClientSchedulerBackend: Add WebUI Filter. org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter, Map(PROXY_HOSTS -> nodo-slave1, PROXY_URI_BASES -> http://nodo-slave1:8088/proxy/application_1785852031172_0001), /proxy/application_1785852031172_0001
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /jobs: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /jobs/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /jobs/job: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /jobs/job/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /stages: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /stages/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /stages/stage: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /stages/stage/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /stages/pool: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /stages/pool/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /storage: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /storage/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /storage/rdd: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /storage/rdd/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /environment: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /environment/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /executors: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /executors/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /executors/threadDump: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /executors/threadDump/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /executors/heapHistogram: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /executors/heapHistogram/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /static: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /api: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /jobs/job/kill: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /stages/stage/kill: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO ServerInfo: Adding filter to /metrics/json: org.apache.hadoop.yarn.server.webproxy.amfilter.AmIpFilter
+26/08/04 14:01:55 INFO YarnSchedulerBackend$YarnSchedulerEndpoint: ApplicationMaster registered as NettyRpcEndpointRef(spark-client://YarnAM)
+26/08/04 14:01:58 INFO YarnClientSchedulerBackend: SchedulerBackend is ready for scheduling beginning after waiting maxRegisteredResourcesWaitingTime: 30000000000(ns)
+=================================================================
+CASO A: MEMORIA DISTRIBUIDA DE SOLO LECTURA
+=================================================================
+Configuración original: {'umbral_alerta': 80, 'factor_penalizacion': 1.25, 'modo': 'laboratorio', 'version': 1}
+Configuración modificada en el Driver: {'umbral_alerta': 999, 'factor_penalizacion': 1.25, 'modo': 'laboratorio', 'version': 2}
+
+RESULTADOS RECIBIDOS DESDE LOS EJECUTORES
+-----------------------------------------------------------------
+Partición=0 | Nodo=nodo-slave1 | PID=480 | ID local=138296642834816 | Umbral=80 | Versión=1 | Lecturas=100000 | Resultado=8000000 | Tiempo=10.743s
+Partición=1 | Nodo=nodo-slave2 | PID=411 | ID local=128208406319552 | Umbral=80 | Versión=1 | Lecturas=100000 | Resultado=8000000 | Tiempo=10.7354s
+Partición=2 | Nodo=nodo-slave1 | PID=480 | ID local=138296642834816 | Umbral=80 | Versión=1 | Lecturas=100000 | Resultado=8000000 | Tiempo=8.0155s
+Partición=3 | Nodo=nodo-slave2 | PID=411 | ID local=128208406319552 | Umbral=80 | Versión=1 | Lecturas=100000 | Resultado=8000000 | Tiempo=8.0105s
+
+Nodos ejecutores observados: ['nodo-slave1', 'nodo-slave2']
+Valor actual en el Driver: 999
+Valor conservado en Broadcast: 80
+DISTRIBUCIÓN CONFIRMADA: participaron al menos dos nodos.
+INMUTABILIDAD CONFIRMADA: Broadcast conservó la copia original.

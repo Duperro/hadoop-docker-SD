@@ -1,15 +1,19 @@
-# Clúster Hadoop distribuido con Docker
+# Clúster distribuido Hadoop con Docker
 
-Proyecto académico que implementa un clúster distribuido de Apache Hadoop utilizando Docker Compose.
+Proyecto académico que implementa un clúster distribuido utilizando Docker Compose, Apache Hadoop, Spark y Redis.
 
-El entorno reproduce una arquitectura de tres nodos con HDFS, YARN y MapReduce, permitiendo realizar pruebas de replicación, tolerancia a fallos y balanceo de almacenamiento.
+El entorno está compuesto por tres nodos Hadoop y un servicio Redis. Permite realizar pruebas de HDFS, YARN, MapReduce, replicación, tolerancia a fallos, balanceo de almacenamiento y memoria compartida distribuida.
 
 ## Tecnologías
 
 - Docker y Docker Compose
 - Ubuntu 22.04
 - Apache Hadoop 3.4.3
+- Apache Spark 3.5.7
 - OpenJDK 11
+- Python 3
+- Redis 7.4.10
+- redis-py 5.2.1
 - HDFS
 - YARN
 - MapReduce
@@ -18,21 +22,28 @@ El entorno reproduce una arquitectura de tres nodos con HDFS, YARN y MapReduce, 
 
 ```mermaid
 flowchart TB
-    M["nodo-master<br/>NameNode<br/>SecondaryNameNode<br/>ResourceManager"]
-    S1["nodo-slave1<br/>DataNode<br/>NodeManager"]
-    S2["nodo-slave2<br/>DataNode<br/>NodeManager"]
+    M["nodo-master<br/>NameNode<br/>SecondaryNameNode<br/>ResourceManager<br/>Spark Driver"]
+    S1["nodo-slave1<br/>DataNode<br/>NodeManager<br/>Spark Executor"]
+    S2["nodo-slave2<br/>DataNode<br/>NodeManager<br/>Spark Executor"]
+    R["redis-memoria<br/>Espacio de direcciones compartido"]
 
     M --- S1
     M --- S2
+    M --> R
+    S1 --> R
+    S2 --> R
 ```
 
 | Contenedor | Servicios |
 |---|---|
-| `nodo-master` | NameNode, SecondaryNameNode y ResourceManager |
-| `nodo-slave1` | DataNode y NodeManager |
-| `nodo-slave2` | DataNode y NodeManager |
+| `nodo-master` | NameNode, SecondaryNameNode, ResourceManager y Spark Driver |
+| `nodo-slave1` | DataNode, NodeManager, Spark Executor y escritor concurrente |
+| `nodo-slave2` | DataNode, NodeManager, Spark Executor y escritor concurrente |
+| `redis-memoria` | Espacio central de direcciones compartidas |
 
-Los contenedores se comunican mediante la red Docker `hadoop-network`. No se utilizan direcciones IP fijas; Docker resuelve los nodos por hostname.
+Los contenedores se comunican mediante la red interna `hadoop-network`. No utilizan direcciones IP fijas: Docker resuelve cada nodo por su hostname.
+
+Redis no forma parte de Hadoop. Es un servicio adicional utilizado en el Laboratorio 2 para administrar un espacio lógico de direcciones mutable y accesible desde los dos nodos esclavos.
 
 ## Estructura
 
@@ -47,10 +58,23 @@ hadoop-docker/
 ├── laboratorio1/
 │   ├── archivos-prueba/
 │   └── evidencias/
+├── laboratorio2/
+│   ├── caso-a-broadcast/
+│   │   └── caso_a_broadcast.py
+│   ├── caso-b-redis/
+│   │   ├── inicializar_redis.py
+│   │   ├── escritor_slave1.py
+│   │   ├── escritor_slave2.py
+│   │   └── comprobar_resultado.py
+│   ├── evidencias/
+│   └── requirements.txt
 ├── scripts/
 │   ├── start-master.sh
 │   ├── start-worker.sh
 │   └── test-cluster.sh
+├── spark-config/
+│   ├── spark-defaults.conf
+│   └── spark-env.sh
 ├── .gitignore
 ├── Dockerfile
 ├── docker-compose.yml
@@ -59,78 +83,49 @@ hadoop-docker/
 
 ## Configuración principal
 
-- NameNode: `hdfs://nodo-master:9000`
-- Replicación HDFS: `2`
-- ResourceManager: `nodo-master`
-- Memoria disponible por NodeManager: `1536 MB`
-- Volúmenes persistentes para NameNode y DataNodes
+| Parámetro | Valor |
+|---|---|
+| NameNode | `hdfs://nodo-master:9000` |
+| Replicación HDFS | `2` |
+| ResourceManager | `nodo-master` |
+| Memoria por NodeManager | `1536 MB` |
+| Ejecutores Spark | `2` |
+| Redis | `redis-memoria:6379` |
+| Direcciones compartidas | 256 |
+| Persistencia | Volúmenes Docker |
 
 ## Requisitos
 
-- Docker Desktop con WSL 2 o Docker Engine para Linux
-- Docker Compose
-- Aproximadamente 6 GB de memoria disponible
-- Espacio suficiente para construir la imagen de Hadoop
+- Docker Desktop con WSL 2 o Docker Engine para Linux.
+- Docker Compose.
+- Al menos 6 GB de memoria disponible; 8 GB recomendados.
+- Espacio suficiente para las imágenes de Hadoop y Spark.
+- Puertos del proyecto disponibles.
 
-## Construcción
+## Construcción e inicio
 
-```bash
-docker compose build
-```
-
-## Iniciar el clúster
+Construir e iniciar todos los servicios:
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
-Comprobar los contenedores:
+Comprobar el estado:
 
 ```bash
 docker compose ps
 ```
 
-## Verificar procesos
-
-Maestro:
-
-```bash
-docker exec nodo-master jps
-```
-
-Resultado esperado:
+Servicios esperados:
 
 ```text
-NameNode
-SecondaryNameNode
-ResourceManager
+nodo-master
+nodo-slave1
+nodo-slave2
+redis-memoria
 ```
 
-Trabajadores:
-
-```bash
-docker exec nodo-slave1 jps
-docker exec nodo-slave2 jps
-```
-
-Resultado esperado:
-
-```text
-DataNode
-NodeManager
-```
-
-## Verificación automática
-
-```bash
-docker exec nodo-master /scripts/test-cluster.sh
-```
-
-Resultado esperado:
-
-```text
-RESULTADO: CLÚSTER COMPLETAMENTE OPERATIVO
-```
+El maestro y Redis deben aparecer como `healthy`.
 
 ## Interfaces web
 
@@ -142,31 +137,109 @@ RESULTADO: CLÚSTER COMPLETAMENTE OPERATIVO
 | DataNode 2 | http://localhost:9865 |
 | NodeManager 1 | http://localhost:8042 |
 | NodeManager 2 | http://localhost:8043 |
+| Spark | http://localhost:4040 |
 
-## Comandos HDFS
+La interfaz de Spark en el puerto `4040` solamente está disponible mientras una aplicación Spark está ejecutándose.
 
-Estado de los DataNodes:
+## Verificación de procesos
+
+Procesos del maestro:
+
+```bash
+docker exec nodo-master jps
+```
+
+Resultado esperado:
+
+```text
+NameNode
+SecondaryNameNode
+ResourceManager
+Jps
+```
+
+Procesos de los trabajadores:
+
+```bash
+docker exec nodo-slave1 jps
+docker exec nodo-slave2 jps
+```
+
+Resultado esperado:
+
+```text
+DataNode
+NodeManager
+Jps
+```
+
+## Verificación automática del clúster Hadoop
+
+```bash
+docker exec nodo-master /scripts/test-cluster.sh
+```
+
+Resultado esperado:
+
+```text
+RESULTADO: CLÚSTER COMPLETAMENTE OPERATIVO
+```
+
+Esta prueba comprueba HDFS, YARN, los dos trabajadores y los resultados del Laboratorio 1.
+
+# Laboratorio 1: HDFS, replicación y balanceo
+
+## Estado de HDFS
 
 ```bash
 docker exec nodo-master hdfs dfsadmin -report
 ```
 
-Crear un directorio:
+Debe mostrar:
+
+```text
+Live datanodes (2)
+```
+
+## Crear un directorio
 
 ```bash
 docker exec nodo-master hdfs dfs -mkdir -p /user/hadoop/laboratorio1
 ```
 
-Listar archivos:
+## Cargar un archivo
 
 ```bash
-docker exec nodo-master hdfs dfs -ls -h /user/hadoop/laboratorio1
+docker cp \
+  laboratorio1/archivos-prueba/datos-prueba.txt \
+  nodo-master:/tmp/datos-prueba.txt
 ```
 
-Comprobar bloques y réplicas:
+```bash
+docker exec nodo-master hdfs dfs -put -f \
+  /tmp/datos-prueba.txt \
+  /user/hadoop/laboratorio1/
+```
+
+## Listar los archivos
 
 ```bash
-docker exec nodo-master hdfs fsck /user/hadoop/laboratorio1/datos-prueba.txt -files -blocks -locations
+docker exec nodo-master hdfs dfs -ls -h \
+  /user/hadoop/laboratorio1
+```
+
+## Comprobar bloques y réplicas
+
+```bash
+docker exec nodo-master hdfs fsck \
+  /user/hadoop/laboratorio1/datos-prueba.txt \
+  -files -blocks -locations
+```
+
+Cada bloque debe mostrar:
+
+```text
+Live_repl=2
 ```
 
 ## Verificar YARN
@@ -175,13 +248,15 @@ docker exec nodo-master hdfs fsck /user/hadoop/laboratorio1/datos-prueba.txt -fi
 docker exec nodo-master yarn node -list
 ```
 
-Deben aparecer dos NodeManagers activos:
+Resultado esperado:
 
 ```text
 Total Nodes:2
 ```
 
-## Prueba MapReduce
+## Ejecutar MapReduce WordCount
+
+El directorio de salida no debe existir antes de ejecutar el trabajo.
 
 ```bash
 docker exec nodo-master hadoop jar \
@@ -225,7 +300,211 @@ docker compose start nodo-slave2
 docker exec nodo-master hdfs balancer -threshold 5
 ```
 
-El umbral representa el porcentaje de diferencia de utilización permitido entre DataNodes.
+El umbral representa el porcentaje de diferencia de utilización permitido entre los DataNodes.
+
+Con replicación `2` y exactamente dos DataNodes, cada bloque termina almacenado en ambos nodos. Por ello, la utilidad observable del Balancer es limitada en esta topología. Su funcionamiento se aprecia mejor con replicación temporal `1` o con tres o más DataNodes.
+
+## Resultados del Laboratorio 1
+
+- Registro de dos DataNodes en HDFS.
+- Registro de dos NodeManagers en YARN.
+- Replicación de bloques con factor 2.
+- Lectura de archivos durante la caída de un DataNode.
+- Recuperación del nodo detenido.
+- Redistribución de bloques mediante HDFS Balancer.
+- Procesamiento distribuido mediante MapReduce WordCount.
+- Persistencia de información mediante volúmenes Docker.
+
+# Laboratorio 2: Memoria Compartida Distribuida
+
+El Laboratorio 2 implementa dos modelos de memoria distribuida:
+
+1. Memoria distribuida de solo lectura mediante Spark Broadcast.
+2. Espacio lógico de direcciones mutable mediante Redis.
+
+## Caso A: Spark Broadcast
+
+El Caso A utiliza `sc.broadcast()` para distribuir un diccionario global desde el Spark Driver hacia los ejecutores administrados por YARN.
+
+```text
+Spark Driver
+  │
+  ├── copia Broadcast → nodo-slave1
+  └── copia Broadcast → nodo-slave2
+```
+
+La estructura original contiene:
+
+```python
+{
+    "umbral_alerta": 80,
+    "factor_penalizacion": 1.25,
+    "modo": "laboratorio",
+    "version": 1
+}
+```
+
+Después de crear el Broadcast, el Driver modifica el umbral a `999`. Los ejecutores continúan leyendo el valor original `80`, demostrando que las copias distribuidas no se actualizan automáticamente.
+
+Ejecutar el caso:
+
+```bash
+docker exec nodo-master spark-submit \
+  /laboratorio2/caso-a-broadcast/caso_a_broadcast.py
+```
+
+Resultados esperados:
+
+```text
+Nodos ejecutores observados: ['nodo-slave1', 'nodo-slave2']
+Valor actual en el Driver: 999
+Valor conservado en Broadcast: 80
+DISTRIBUCIÓN CONFIRMADA
+INMUTABILIDAD CONFIRMADA
+```
+
+### Interpretación del Caso A
+
+Spark Broadcast no crea una única dirección física compartida. El Driver serializa la estructura y distribuye una copia de solo lectura hacia cada proceso ejecutor.
+
+Las lecturas posteriores se realizan localmente, reduciendo la transferencia repetitiva de datos por la red.
+
+## Caso B: espacio de direcciones con Redis
+
+Redis administra un espacio compartido compuesto por 256 direcciones lógicas:
+
+```text
+memoria:0x0000
+memoria:0x0001
+memoria:0x0002
+...
+memoria:0x00FF
+```
+
+El prefijo `memoria:` identifica el espacio compartido. El componente hexadecimal identifica una posición lógica diferente.
+
+Estas claves no representan direcciones físicas de RAM. Son direcciones lógicas administradas dentro del espacio de claves de Redis.
+
+| Propiedad | Valor |
+|---|---|
+| Dirección inicial | `memoria:0x0000` |
+| Dirección final | `memoria:0x00FF` |
+| Total de direcciones | 256 |
+| Escritores concurrentes | 2 |
+| Escrituras por nodo | 100.000 |
+| Escrituras totales | 200.000 |
+
+### Inicializar el espacio
+
+```bash
+docker exec nodo-master python3 \
+  /laboratorio2/caso-b-redis/inicializar_redis.py
+```
+
+### Verificar las direcciones
+
+```bash
+docker exec redis-memoria sh -c \
+  'redis-cli --scan --pattern "memoria:0x*" | wc -l'
+```
+
+Resultado esperado:
+
+```text
+256
+```
+
+Consultar varias posiciones:
+
+```bash
+docker exec redis-memoria redis-cli MGET \
+  memoria:0x0000 \
+  memoria:0x001A \
+  memoria:0x0080 \
+  memoria:0x00FF
+```
+
+### Ejecutar los escritores concurrentemente
+
+Desde PowerShell:
+
+```powershell
+$writer1 = Start-Job -Name "writer-slave1" -ScriptBlock {
+    docker exec nodo-slave1 python3 /laboratorio2/caso-b-redis/escritor_slave1.py
+}
+
+$writer2 = Start-Job -Name "writer-slave2" -ScriptBlock {
+    docker exec nodo-slave2 python3 /laboratorio2/caso-b-redis/escritor_slave2.py
+}
+```
+
+Esperar su finalización:
+
+```powershell
+Wait-Job -Job $writer1, $writer2
+```
+
+Mostrar los resultados:
+
+```powershell
+Receive-Job -Job $writer1
+Receive-Job -Job $writer2
+```
+
+Eliminar los trabajos finalizados de PowerShell:
+
+```powershell
+Remove-Job -Job $writer1, $writer2
+```
+
+### Generar el reporte
+
+```bash
+docker exec nodo-master python3 \
+  /laboratorio2/caso-b-redis/comprobar_resultado.py
+```
+
+Resultados esperados:
+
+```text
+Direcciones encontradas: 256
+ESPACIO CONFIRMADO: existen las 256 posiciones.
+Escrituras totales: 200000
+CONCURRENCIA CONFIRMADA: participaron los dos nodos.
+```
+
+### Interpretación del Caso B
+
+Cada operación `SET` es ejecutada de manera atómica por Redis: el valor se escribe completamente o no se escribe.
+
+Sin embargo, ambos esclavos modifican las mismas posiciones. El último escritor de cada dirección depende del orden real de ejecución, por lo que el contenido final es consistente a nivel de operación, pero no determinista respecto al escritor ganador.
+
+Las 200.000 escrituras no crean 200.000 direcciones. Sobrescriben repetidamente las 256 posiciones existentes, de forma comparable a múltiples escrituras sobre un espacio limitado de memoria.
+
+## Comparación de los casos
+
+| Característica | Spark Broadcast | Redis |
+|---|---|---|
+| Tipo de acceso | Solo lectura | Lectura y escritura |
+| Modelo | Copias locales por ejecutor | Estado central compartido |
+| Actualización | No automática | Visible después de cada operación |
+| Escritura concurrente | No aplica | Sí |
+| Consistencia | Copia inmutable | Última escritura prevalece |
+| Direcciones | Copias en procesos separados | 256 posiciones lógicas |
+| Uso principal | Parámetros globales | Estado mutable compartido |
+
+## Resultados del Laboratorio 2
+
+- Spark distribuyó el diccionario hacia los ejecutores administrados por YARN.
+- Las copias Broadcast conservaron el valor original.
+- La modificación en el Driver no alteró las copias existentes.
+- Redis creó un espacio compartido de 256 direcciones lógicas.
+- Los dos esclavos realizaron 100.000 escrituras cada uno.
+- Se procesaron 200.000 escrituras concurrentes.
+- No se generaron valores parcialmente escritos.
+- El último escritor de cada dirección fue no determinista.
+
+# Administración del entorno
 
 ## Detener el clúster
 
@@ -233,9 +512,9 @@ El umbral representa el porcentaje de diferencia de utilización permitido entre
 docker compose down
 ```
 
-Este comando elimina los contenedores y la red, pero conserva los volúmenes.
+Este comando elimina los contenedores y la red, pero conserva los volúmenes de HDFS y Redis.
 
-Para iniciar nuevamente:
+Para iniciarlo nuevamente:
 
 ```bash
 docker compose up -d
@@ -243,25 +522,14 @@ docker compose up -d
 
 ## Eliminar completamente los datos
 
-> Advertencia: este comando elimina permanentemente la metadata del NameNode y los bloques almacenados.
+> **Advertencia:** este comando elimina permanentemente la metadata del NameNode, los bloques de HDFS y la información persistida en Redis.
 
 ```bash
 docker compose down -v
 ```
 
-## Pruebas realizadas
-
-- Registro de dos DataNodes en HDFS.
-- Registro de dos NodeManagers en YARN.
-- Replicación de bloques con factor 2.
-- Lectura de archivos durante la caída de un DataNode.
-- Recuperación de un nodo detenido.
-- Redistribución de bloques mediante HDFS Balancer.
-- Procesamiento distribuido con MapReduce WordCount.
-- Persistencia mediante volúmenes Docker.
-
 ## Autor
 
-Rafael Bermeo Macías  
+**Rafael Bermeo Macías**  
 Ingeniería en Ciencias de la Computación  
 Sistemas Distribuidos

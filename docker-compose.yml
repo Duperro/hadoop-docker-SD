@@ -22,8 +22,14 @@ services:
       # Interfaz del SecondaryNameNode
       - "9868:9868"
 
+      # Interfaz temporal de Spark
+      - "4040:4040"
+
     volumes:
       - namenode_data:/data/hdfs/namenode
+      - ./laboratorio2:/laboratorio2:ro
+
+      
 
     networks:
       - hadoop-network
@@ -52,6 +58,7 @@ services:
 
     volumes:
       - datanode1_data:/data/hdfs/datanode
+      - ./laboratorio2:/laboratorio2:ro
 
     networks:
       - hadoop-network
@@ -75,7 +82,8 @@ services:
 
     volumes:
       - datanode2_data:/data/hdfs/datanode
-
+      - ./laboratorio2:/laboratorio2:ro
+      
     networks:
       - hadoop-network
 
@@ -84,6 +92,33 @@ services:
         condition: service_healthy
 
     stop_grace_period: 30s
+
+  redis-memoria:
+    image: redis:7.4.10-alpine
+    container_name: redis-memoria
+    hostname: redis-memoria
+
+    command:
+      - redis-server
+      - --bind
+      - 0.0.0.0
+      - --protected-mode
+      - "no"
+      - --appendonly
+      - "yes"
+
+    volumes:
+      - redis_data:/data
+
+    networks:
+      - hadoop-network
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
 
 networks:
   hadoop-network:
@@ -99,3 +134,6 @@ volumes:
 
   datanode2_data:
     name: hadoop-datanode2-data
+
+  redis_data:
+    name: redis-memoria-data
