@@ -1,0 +1,14 @@
+{
+  "nodo-master": {
+    "host": "nodo-master",
+    "port": 5000
+  },
+  "nodo-slave1": {
+    "host": "nodo-slave1",
+    "port": 5001
+  },
+  "nodo-slave2": {
+    "host": "nodo-slave2",
+    "port": 5002
+  }
+}
