@@ -26,19 +26,19 @@ El entorno está compuesto por tres nodos Hadoop y un servicio Redis. Permite re
 
 **## Arquitectura**
 
-\`\`\`mermaid
+```mermaid
 flowchart TB
-    M["nodo-master\<br/>NameNode\<br/>SecondaryNameNode\<br/>ResourceManager\<br/>Spark Driver"]
-    S1["nodo-slave1\<br/>DataNode\<br/>NodeManager\<br/>Spark Executor"]
-    S2["nodo-slave2\<br/>DataNode\<br/>NodeManager\<br/>Spark Executor"]
-    R["redis-memoria\<br/>Espacio de direcciones compartido"]
+    M["nodo-master<br/>NameNode<br/>SecondaryNameNode<br/>ResourceManager<br/>Spark Driver"]
+    S1["nodo-slave1<br/>DataNode<br/>NodeManager<br/>Spark Executor"]
+    S2["nodo-slave2<br/>DataNode<br/>NodeManager<br/>Spark Executor"]
+    R["redis-memoria<br/>Espacio de direcciones compartido"]
 
-    M --- S1
-    M --- S2
-    M --> R
-    S1 --> R
-    S2 --> R
-\`\`\`
+    M --- S1
+    M --- S2
+    M --> R
+    S1 --> R
+    S2 --> R
+```
 
 \| Contenedor | Servicios |
 \|---|---|
