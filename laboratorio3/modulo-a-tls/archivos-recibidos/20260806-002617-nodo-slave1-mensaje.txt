@@ -1,0 +1,4 @@
+Archivo de prueba del Laboratorio 3.
+
+Este mensaje debe viajar cifrado entre los nodos del sistema distribuido.
+Si TLS funciona correctamente, el contenido no podrá observarse en una captura de red.

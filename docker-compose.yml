@@ -28,8 +28,7 @@ services:
     volumes:
       - namenode_data:/data/hdfs/namenode
       - ./laboratorio2:/laboratorio2:ro
-
-      
+      - ./laboratorio3:/laboratorio3
 
     networks:
       - hadoop-network
@@ -59,6 +58,7 @@ services:
     volumes:
       - datanode1_data:/data/hdfs/datanode
       - ./laboratorio2:/laboratorio2:ro
+      - ./laboratorio3:/laboratorio3
 
     networks:
       - hadoop-network
@@ -83,6 +83,7 @@ services:
     volumes:
       - datanode2_data:/data/hdfs/datanode
       - ./laboratorio2:/laboratorio2:ro
+      - ./laboratorio3:/laboratorio3
       
     networks:
       - hadoop-network

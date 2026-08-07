@@ -25,3 +25,12 @@ docker-compose.override.yml
 
 # Evidencias temporales
 laboratorio1/evidencias/*.tmp
+# Laboratorio 3 - certificados y claves privadas
+laboratorio3/modulo-a-tls/certificados/**/*.key
+laboratorio3/modulo-a-tls/certificados/**/*.p12
+laboratorio3/modulo-a-tls/certificados/**/*.jks
+laboratorio3/modulo-a-tls/certificados/**/*.srl
+
+# Capturas de red
+laboratorio3/**/*.pcap
+laboratorio3/**/*.pcapng

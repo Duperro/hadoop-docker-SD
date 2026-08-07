@@ -16,9 +16,12 @@ RUN apt-get update && \
         procps \
         iputils-ping \
         net-tools \
+        iproute2 \
         python3 \
         python3-pip \
         openssh-client \
+        openssl \
+        tcpdump \
         tini && \
     rm -rf /var/lib/apt/lists/*
 
