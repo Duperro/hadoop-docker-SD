@@ -60,11 +60,11 @@ El entorno permite ejecutar prácticas de:
 ## Arquitectura
 
 ```mermaid
-flowchart TB
-    M["nodo-master<br/>NameNode<br/>SecondaryNameNode<br/>ResourceManager<br/>Spark Driver<br/>Servidor mTLS<br/>Ricart-Agrawala"]
-    S1["nodo-slave1<br/>DataNode<br/>NodeManager<br/>Spark Executor<br/>Cliente mTLS<br/>Ricart-Agrawala"]
-    S2["nodo-slave2<br/>DataNode<br/>NodeManager<br/>Spark Executor<br/>Cliente mTLS<br/>Ricart-Agrawala"]
-    R["redis-memoria<br/>Espacio lógico de direcciones compartidas"]
+graph TB
+    M["nodo-master<br>NameNode<br>SecondaryNameNode<br>ResourceManager<br>Spark Driver<br>Servidor mTLS<br>Ricart-Agrawala"]
+    S1["nodo-slave1<br>DataNode<br>NodeManager<br>Spark Executor<br>Cliente mTLS<br>Ricart-Agrawala"]
+    S2["nodo-slave2<br>DataNode<br>NodeManager<br>Spark Executor<br>Cliente mTLS<br>Ricart-Agrawala"]
+    R["redis-memoria<br>Espacio lógico de direcciones compartidas"]
 
     M --- S1
     M --- S2
